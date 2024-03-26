@@ -34,6 +34,7 @@ const useCarouselScroll = ({
       tempTranslation -= actualContentWidth;
       setVirtualPage((prev) => prev + 1);
     }
+
     if (tempTranslation < 0 && virtualPage > 0) {
       tempTranslation += actualContentWidth;
       setVirtualPage((prev) => prev - 1);
@@ -51,16 +52,17 @@ const useCarouselScroll = ({
     event: TouchEvent<HTMLUListElement> | WheelEvent<HTMLUListElement>
   ) => {
     if (event.type === "touchstart") {
-      setDragStart(
-        (event as TouchEvent<HTMLUListElement>).targetTouches[0].pageX
-      );
+      setDragStart((event as TouchEvent<HTMLUListElement>).targetTouches[0].pageX);
     } else if (event.type === "touchmove") {
       const touchEvent = event as TouchEvent<HTMLUListElement>;
       if (touchEvent.targetTouches[0].pageX === 0) return;
+
       const dragDistance = touchEvent.targetTouches[0].pageX - dragStart;
+
       translate(dragDistance);
     } else if (event.type === "wheel") {
       const wheelEvent = event as WheelEvent<HTMLUListElement>;
+
       translate(wheelEvent.deltaY);
     }
   };
