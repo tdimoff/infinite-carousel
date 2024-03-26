@@ -22,6 +22,7 @@ const ImageCarouselWrapper = () => {
       images={images}
       visibleImageCount={10}
       imageWidth={500}
+      spacing={8}
     />
   );
 };

@@ -4,12 +4,14 @@ interface IUseCarouselScrollProps {
   contentWidth: number;
   imageWidth: number;
   imagesLength: number;
+  itemMargin: number;
 }
 
 const useCarouselScroll = ({
   contentWidth,
   imageWidth,
   imagesLength,
+  itemMargin,
 }: IUseCarouselScrollProps) => {
   const contentRef = useRef<HTMLUListElement>(null);
   const [dragStart, setDragStart] = useState(0);
@@ -24,6 +26,7 @@ const useCarouselScroll = ({
   };
 
   const translate = (dx: number) => {
+    const adjustedImageWidth = imageWidth + itemMargin * 2;
     let tempTranslation = -(translation + dx);
     const actualContentWidth = contentWidth / 2;
 
@@ -31,13 +34,12 @@ const useCarouselScroll = ({
       tempTranslation -= actualContentWidth;
       setVirtualPage((prev) => prev + 1);
     }
-
     if (tempTranslation < 0 && virtualPage > 0) {
       tempTranslation += actualContentWidth;
       setVirtualPage((prev) => prev - 1);
     }
 
-    setVisibleMinIndex(Math.floor(tempTranslation / imageWidth) % imagesLength);
+    setVisibleMinIndex(Math.floor(tempTranslation / adjustedImageWidth) % imagesLength);
 
     if (tempTranslation >= 0 && tempTranslation <= actualContentWidth) {
       animate(-tempTranslation);
@@ -55,13 +57,10 @@ const useCarouselScroll = ({
     } else if (event.type === "touchmove") {
       const touchEvent = event as TouchEvent<HTMLUListElement>;
       if (touchEvent.targetTouches[0].pageX === 0) return;
-
       const dragDistance = touchEvent.targetTouches[0].pageX - dragStart;
-
       translate(dragDistance);
     } else if (event.type === "wheel") {
       const wheelEvent = event as WheelEvent<HTMLUListElement>;
-
       translate(wheelEvent.deltaY);
     }
   };

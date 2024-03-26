@@ -8,19 +8,21 @@ interface IInfiniteCarouselProps {
   images: IImage[];
   imageWidth: number;
   visibleImageCount: number;
+  spacing: number;
 }
 
-const InfiniteCarousel = ({ images, imageWidth, visibleImageCount }: IInfiniteCarouselProps) => {
+const InfiniteCarousel = ({ images, imageWidth, visibleImageCount, spacing }: IInfiniteCarouselProps) => {
   const [contentWidth, setContentWidth] = useState(0);
   const { contentRef, visibleMinIndex, handleScroll } = useCarouselScroll({
     contentWidth,
     imageWidth,
     imagesLength: images.length,
+    itemMargin: spacing
   });
 
   useEffect(() => {
     if (contentRef.current) {
-      setContentWidth(contentRef.current.getBoundingClientRect().width);
+      setContentWidth(contentRef.current.clientWidth);
     }
   }, [contentRef, images]);
 

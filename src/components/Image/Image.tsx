@@ -7,7 +7,7 @@ interface IImageProps {
 }
 
 const Image = ({ src, alt, objectFit = "cover" }: IImageProps) => (
-  <div className={styles["image-container"]}>
+  <div>
     <img src={src} alt={alt} style={{ objectFit }} className={styles.image} />
   </div>
 );
