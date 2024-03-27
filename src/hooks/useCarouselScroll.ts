@@ -56,10 +56,10 @@ const useCarouselScroll = ({
     } else if (event.type === "touchmove") {
       const touchEvent = event as TouchEvent<HTMLUListElement>;
       if (touchEvent.targetTouches[0].pageX === 0) return;
-
-      const dragDistance = touchEvent.targetTouches[0].pageX - dragStart;
-
+      const dragDistance = (touchEvent.targetTouches[0].pageX - dragStart) * 1.8;
+  
       translate(dragDistance);
+      setDragStart(touchEvent.targetTouches[0].pageX);
     } else if (event.type === "wheel") {
       const wheelEvent = event as WheelEvent<HTMLUListElement>;
 
