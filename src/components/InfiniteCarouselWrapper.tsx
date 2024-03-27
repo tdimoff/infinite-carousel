@@ -7,7 +7,7 @@ const ImageCarouselWrapper = () => {
   const [images, setImages] = useState<IImage[]>([]);
 
   useEffect(() => {
-    const params = { limit: 20, offset: 0 };
+    const params = { limit: 10, offset: 0 };
     const fetchImagesAsync = async () => {
       const imageData = await fetchImages(params);
 
