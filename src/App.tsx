@@ -1,11 +1,13 @@
-import InifiniteCarouselWrapper from "./components/InfiniteCarouselWrapper";
-import "./App.css";
+import './App.scss';
+import InfiniteCarouselWrapper from './components/InfiniteCarouselWrapper';
 
-const App = () => (
-  <div className="App">
-    <h1 className="title">React Infinite Carousel</h1>
-    <InifiniteCarouselWrapper />
-  </div>
-);
+function App() {
+  return (
+    <div className="App">
+      <h1>Infinite Carousel</h1>
+      <InfiniteCarouselWrapper />
+    </div>
+  );
+}
 
 export default App;

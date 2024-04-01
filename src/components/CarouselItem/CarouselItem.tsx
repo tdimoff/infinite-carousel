@@ -1,18 +1,15 @@
-import { IImage } from "../../interfaces/IImage.interface";
 import styles from "./CarouselItem.module.scss";
 import Image from "../Image/Image";
+import { IImage } from "../../interfaces/IImage.interface";
 
-interface IImageItemProps {
+interface ICarouselItemProps {
   image: IImage;
-  isVisible: boolean;
 }
 
-const CarouselItem = ({ image, isVisible }: IImageItemProps) => {
-  return (
-    <li className={styles["carousel-item"]}>
-      {isVisible && <Image src={image.url} alt={image.title} />}
-    </li>
-  );
-};
+const CarouselItem = ({ image }: ICarouselItemProps) => (
+  <li className={styles["carousel-item"]}>
+    <Image image={image} />
+  </li>
+);
 
 export default CarouselItem;

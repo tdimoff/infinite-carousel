@@ -1,30 +1,22 @@
-import { useEffect, useState } from "react";
-import { IImage } from "../interfaces/IImage.interface";
 import { fetchImages } from "../api/images";
+import { useEffect, useState } from "react";
 import InfiniteCarousel from "./InfiniteCarousel/InfiniteCarousel";
+import { IImage } from "../interfaces/IImage.interface";
 
-const ImageCarouselWrapper = () => {
+const InfiniteCarouselWrapper = () => {
   const [images, setImages] = useState<IImage[]>([]);
 
   useEffect(() => {
-    const params = { limit: 10, offset: 0 };
-    const fetchImagesAsync = async () => {
-      const imageData = await fetchImages(params);
+    const fetchData = async () => {
+      const data = await fetchImages({ limit: 12 });
 
-      setImages(imageData);
+      setImages([...data, ...data]);
     };
 
-    fetchImagesAsync();
+    fetchData();
   }, []);
 
-  return (
-    <InfiniteCarousel
-      images={images}
-      visibleImageCount={10}
-      imageWidth={500}
-      spacing={8}
-    />
-  );
+  return <InfiniteCarousel images={images} spacing={8} imageWidth={500} />;
 };
 
-export default ImageCarouselWrapper;
+export default InfiniteCarouselWrapper;

@@ -1,55 +1,40 @@
-import { useEffect, useState } from "react";
-import { IImage } from "../../interfaces/IImage.interface";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 import styles from "./InfiniteCarousel.module.scss";
 import CarouselItem from "../CarouselItem/CarouselItem";
-import useCarouselScroll from "../../hooks/useCarouselScroll";
+import { IImage } from "../../interfaces/IImage.interface";
 
-interface IInfiniteCarouselProps {
+interface IInifiniteCarouselProps {
   images: IImage[];
-  imageWidth: number;
-  visibleImageCount: number;
   spacing: number;
+  imageWidth: number;
 }
 
-const InfiniteCarousel = ({ images, imageWidth, visibleImageCount, spacing }: IInfiniteCarouselProps) => {
-  const [contentWidth, setContentWidth] = useState(0);
-  const { contentRef, visibleMinIndex, handleScroll } = useCarouselScroll({
-    contentWidth,
+const InifiniteCarousel = ({
+  images,
+  spacing,
+  imageWidth,
+}: IInifiniteCarouselProps) => {
+  const { contentRef, handleScroll } = useInfiniteScroll({
+    spacing,
     imageWidth,
-    imagesLength: images.length,
-    itemMargin: spacing
+    imageCount: images.length,
   });
-
-  useEffect(() => {
-    if (contentRef.current) {
-      setContentWidth(contentRef.current.clientWidth);
-    }
-  }, [contentRef, images]);
-
-  const imagesToListElements = (prefix = "") => {
-    return images?.map((image: IImage, index) => (
-      <CarouselItem
-        key={`${prefix}_${image.id}`}
-        image={image}
-        isVisible={index <= visibleMinIndex + visibleImageCount}
-      />
-    ));
-  };
 
   return (
     <div className={styles.carousel}>
       <ul
+        className={styles["carousel-container"]}
         ref={contentRef}
-        className={styles.carousel__content}
+        onWheel={handleScroll}
         onTouchStart={handleScroll}
         onTouchMove={handleScroll}
-        onWheel={handleScroll}
       >
-        {imagesToListElements()}
-        {imagesToListElements("clone")}
+        {images.map((image: IImage, i) => (
+          <CarouselItem key={`${image.id}-${i}`} image={image} />
+        ))}
       </ul>
     </div>
   );
 };
 
-export default InfiniteCarousel;
+export default InifiniteCarousel;

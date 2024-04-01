@@ -1,23 +1,21 @@
-import { useState, useRef, TouchEvent, WheelEvent } from "react";
+import { useState, useRef } from "react";
+import { WheelEvent, TouchEvent } from "react";
 
-interface IUseCarouselScrollProps {
-  contentWidth: number;
+interface IUseInfiniteScroll {
+  spacing: number;
   imageWidth: number;
-  imagesLength: number;
-  itemMargin: number;
+  imageCount: number;
 }
 
-const useCarouselScroll = ({
-  contentWidth,
+const useInfiniteScroll = ({
+  spacing,
   imageWidth,
-  imagesLength,
-  itemMargin,
-}: IUseCarouselScrollProps) => {
+  imageCount,
+}: IUseInfiniteScroll) => {
   const contentRef = useRef<HTMLUListElement>(null);
-  const [dragStart, setDragStart] = useState(0);
   const [translation, setTranslation] = useState(0);
   const [virtualPage, setVirtualPage] = useState(0);
-  const [visibleMinIndex, setVisibleMinIndex] = useState(0);
+  const [dragStart, setDragStart] = useState(0);
 
   const animate = (translate: number) => {
     if (contentRef.current) {
@@ -25,24 +23,22 @@ const useCarouselScroll = ({
     }
   };
 
-  const translate = (dx: number) => {
-    const adjustedImageWidth = imageWidth + itemMargin * 2;
-    let tempTranslation = -(translation + dx);
-    const actualContentWidth = contentWidth / 2;
+  const translate = (deltaY: number) => {
+    const imageWidthWithMargin = imageWidth + spacing * 2;
+    const realContentWidth = (imageWidthWithMargin * imageCount) / 2;
+    let tempTranslation = -(translation + deltaY);
 
-    if (tempTranslation > actualContentWidth) {
-      tempTranslation -= actualContentWidth;
+    if (tempTranslation > realContentWidth) {
+      tempTranslation -= realContentWidth;
       setVirtualPage((prev) => prev + 1);
     }
 
     if (tempTranslation < 0 && virtualPage > 0) {
-      tempTranslation += actualContentWidth;
+      tempTranslation += realContentWidth;
       setVirtualPage((prev) => prev - 1);
     }
 
-    setVisibleMinIndex(Math.floor(tempTranslation / adjustedImageWidth) % imagesLength);
-
-    if (tempTranslation >= 0 && tempTranslation <= actualContentWidth) {
+    if (tempTranslation >= 0 && tempTranslation <= realContentWidth) {
       animate(-tempTranslation);
       setTranslation(-tempTranslation);
     }
@@ -61,18 +57,15 @@ const useCarouselScroll = ({
       translate(dragDistance);
       setDragStart(touchEvent.targetTouches[0].pageX);
     } else if (event.type === "wheel") {
-      const wheelEvent = event as WheelEvent<HTMLUListElement>;
 
-      translate(wheelEvent.deltaY);
+      translate((event as WheelEvent).deltaY);
     }
   };
 
   return {
     contentRef,
-    translation,
-    visibleMinIndex,
     handleScroll,
   };
 };
 
-export default useCarouselScroll;
+export default useInfiniteScroll;
